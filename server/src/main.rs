@@ -1,10 +1,14 @@
 use axum::{Router, routing::get};
 
+mod api;
+
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     tracing_subscriber::fmt::init();
 
-    let app = Router::new().route("/", get(hello));
+    let app = Router::new()
+        .nest("/api", api::app())
+        .route("/", get(hello));
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await?;
 
