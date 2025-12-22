@@ -1,5 +1,7 @@
-use axum::Router;
+use axum::{Router, routing::post};
+
+mod register;
 
 pub fn app() -> Router {
-    Router::new()
+    Router::new().route("/register", post(register::register))
 }
