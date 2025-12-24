@@ -1,4 +1,5 @@
-use axum::{Router, routing::get};
+use axum::{Extension, Router, routing::get};
+use sea_orm::Database;
 
 mod api;
 
@@ -6,9 +7,12 @@ mod api;
 async fn main() -> anyhow::Result<()> {
     tracing_subscriber::fmt::init();
 
+    let db = Database::connect("sqlite::memory").await?;
+
     let app = Router::new()
         .nest("/api", api::app())
-        .route("/", get(hello));
+        .route("/", get(hello))
+        .layer(Extension(db));
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await?;
 
