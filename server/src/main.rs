@@ -7,7 +7,7 @@ mod api;
 async fn main() -> anyhow::Result<()> {
     tracing_subscriber::fmt::init();
 
-    let db = Database::connect("sqlite::memory").await?;
+    let db = Database::connect(std::env::var("DATABASE_URL")?).await?;
 
     let app = Router::new()
         .nest("/api", api::app())
